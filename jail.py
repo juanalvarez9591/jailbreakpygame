@@ -14,6 +14,8 @@ startTime = time.time()
 timer = "0" # logic license, so we can check if timer is != than x (x will be != 0 so it will fakely pass the first time) before defining x
 TIMERLIMIT = "30" # need to be a str
 
+# Score stuff
+SCORE = 0
 
 def displayText(text, x, y, fonttype="Consolas", fontsize=30, fontcolor=(0,0,0)):
     pygame.font.init()
@@ -30,6 +32,15 @@ def GameOver():
 running = True
 while running:
     screen.fill((255, 255, 255))
+    
+    displayText(str(SCORE), 25, 25)
+
+    # Event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            SCORE += 1
 
     # Timer
     if timer != TIMERLIMIT:
@@ -37,13 +48,6 @@ while running:
         Timer = displayText(timer, HEIGHT/2, WIDTH/2)
     else: 
         GameOver()
-
-
-
-    # Event handling
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
 
     pygame.display.flip()
 
