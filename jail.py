@@ -17,7 +17,7 @@ TIMERLIMIT = "30" # need to be a str
 # Score stuff
 SCORE = 0
 ScoreMining = False 
-ScorePace = 0.0005
+ScorePace = {"VerySlow": 0.0005, "Slow": 0.0010}
 
 def displayText(text, x, y, fonttype="Consolas", fontsize=30, fontcolor=(0,0,0)):
     pygame.font.init()
@@ -55,7 +55,7 @@ while running:
     displayText(str(int(SCORE)), 25, 25)
 
     if ScoreMining == True:
-        SCORE += ScorePace*dt
+        SCORE += ScorePace["Slow"]*dt
     # Timer
     if timer != TIMERLIMIT:
         timer = str(int(time.time() - startTime))
