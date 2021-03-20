@@ -12,12 +12,13 @@ screen = pygame.display.set_mode([HEIGHT, WIDTH])
 # Timer things outside loop
 startTime = time.time()
 timer = "0" # logic license, so we can check if timer is != than x (x will be != 0 so it will fakely pass the first time) before defining x
-TIMERLIMIT = "30" # need to be a str
+TIMERLIMIT = "60" # need to be a str
 
 # Score stuff
 SCORE = 0
 ScoreMining = False 
-ScorePace = {"VerySlow": 0.0005, "Slow": 0.0010}
+ScorePace = {"VerySlow": 0.0005, "Slow": 0.001, "Normal":0.003,"Quick": 0.005}
+SCORELIMIT = 100
 
 def displayText(text, x, y, fonttype="Consolas", fontsize=30, fontcolor=(0,0,0)):
     pygame.font.init()
@@ -26,9 +27,10 @@ def displayText(text, x, y, fonttype="Consolas", fontsize=30, fontcolor=(0,0,0))
     screen.blit(textsurface,(x,y))
 
 def GameOver():
-    if timer == TIMERLIMIT:
+    if timer == TIMERLIMIT and SCORE < SCORELIMIT:
         displayText("GAME OVER!", 10, 10)
-    else: pass
+    elif SCORE >= SCORELIMIT:
+        displayText("YOU WIN!", 10, 10)
 
 # Fixing FPS
 clock = pygame.time.Clock()
@@ -54,8 +56,13 @@ while running:
     # Score handling
     displayText(str(int(SCORE)), 25, 25)
 
+    if SCORE >= SCORELIMIT:
+        ScoreMining = False
+        GameOver()
+
     if ScoreMining == True:
-        SCORE += ScorePace["Slow"]*dt
+        SCORE += ScorePace["Normal"]*dt
+
     # Timer
     if timer != TIMERLIMIT:
         timer = str(int(time.time() - startTime))
