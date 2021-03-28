@@ -13,22 +13,22 @@ screen = pygame.display.set_mode([HEIGHT, WIDTH])
 # Timer things outside loop
 startTime = time.time()
 timer = "0" # logic license, so we can check if timer is != than x (x will be != 0 so it will fakely pass the first time) before defining x
-TIMERLIMIT = "60" # need to be a str
+TIMERLIMIT = "10" # need to be a str
 
 # Score stuff
 SCORE = 0
 ScoreMining = False 
 ScorePace = {"Normal":5}
-SCORELIMIT = 100
+SCORELIMIT = 10
 
 # Displaying text
-def displayText(text, x, y, fonttype="Consolas", fontsize=30, fontcolor=(0,0,0)):
+def displayText(text, x, y, fontsize=64, fontcolor=(0,0,0)):
     pygame.font.init()
-    myfont = pygame.font.SysFont(fonttype, fontsize)
-    textsurface = myfont.render(text, False, fontcolor)
-    screen.blit(textsurface,(x,y))
+    my_font = pygame.font.Font("assets/font.otf", fontsize) #Load font object.
+    text = my_font.render(text, True, fontcolor) #Render text image.
+    screen.blit(text, (x,y)) #Draw image to screen.
 
-# Sprite class
+# Sprite classes 
 
 class Sprite(pygame.sprite.Sprite):
     def __init__(self):
@@ -47,33 +47,32 @@ class Sprite(pygame.sprite.Sprite):
         except: pass
 
     def update(self):
-        print(self.index)
-
-        self.index += 0.5 # Frame upgrade velocity
+        self.index += 0.2 # Frame upgrade velocity
         if self.index >= len(self.images):
             self.index = 0
         self.image = self.images[math.floor(self.index)]
 
-class Yuta(Sprite):
+class Prisioner(Sprite):
     def __init__(self):
         super().__init__()
-        for i in range(1,22):
+        for i in range(1,9):
             self.images.append(pygame.image.load('assets/idleprisioner'+str(i)+'.png'))
-        self.x = HEIGHT/2
-        self.y = WIDTH/2
+        self.x = 46
+        self.y = 254
         self.spriteheight = 255
         self.spritewidth = 115
         self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
 
-SpriteObject = Yuta()
-SpriteGroup = pygame.sprite.Group(SpriteObject)
+# Calling sprites
+PrisionerObject = Prisioner()
+Prisioner = pygame.sprite.Group(PrisionerObject)
 
 # Game over condition
 def GameOver():
     if timer == TIMERLIMIT and SCORE < SCORELIMIT:
-        displayText("GAME OVER!", 10, 10)
+        displayText("GAME OVER!", 150, 175, 150, (225, 45, 44))
     elif SCORE >= SCORELIMIT:
-        displayText("YOU WIN!", 10, 10)
+        displayText("YOU WIN!", 200, 260, 150, (255, 165, 0))
 
 # Fixing FPS
 clock = pygame.time.Clock()
@@ -81,13 +80,18 @@ clock = pygame.time.Clock()
 # Game loop
 running = True
 while running:
+    # debugging mousepos
+    mousex,mousey = pygame.mouse.get_pos()
+    print(mousex, mousey)
     # Fixing FPS
     dt = clock.tick(30)/1000.0
 
     # Refesh screen
-    SpriteGroup.update()
     screen.blit(pygame.image.load('assets/background.png'), (0, 0))
-    SpriteGroup.draw(screen)
+    
+    # Refresh prisioner sprite
+    Prisioner.update()
+    Prisioner.draw(screen)
 
     # Event handling
     for event in pygame.event.get():
@@ -111,7 +115,7 @@ while running:
     # Timer
     if timer != TIMERLIMIT:
         timer = str(int(time.time() - startTime))
-        Timer = displayText(timer, HEIGHT/2, WIDTH/2)
+        Timer = displayText(timer, 150, 60)
     else: 
         GameOver()
 
