@@ -30,34 +30,42 @@ def displayText(text, x, y, fonttype="Consolas", fontsize=30, fontcolor=(0,0,0))
 
 # Sprite class
 
-class MySprite(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        super(MySprite, self).__init__()
+class Sprite(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Sprite, self).__init__()
         self.images = []
 
-        self.images.append(pygame.image.load('assets/policeone.png'))
-        self.images.append(pygame.image.load('assets/policeonse.png'))
-
-        self.spriteheight = 64
-        self.spritewidth = 64
+        self.spriteheight = 0
+        self.spritewidth = 0
+        self.x = 1
+        self.y = 1
 
         self.index = 0
-        self.image = self.images[self.index]
-
-        self.rect = pygame.Rect(x, y, self.spriteheight, self.spritewidth)
-
-        #self.images_left = [pygame.transform.flip(image, True, False) for image in images]  # Flipping every image.
-
+        try:
+            self.image = self.images[self.index]
+            self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+        except: pass
 
     def update(self):
         print(self.index)
 
-        self.index += dt*2 # Frame upgrade velocity
+        self.index += 0.5 # Frame upgrade velocity
         if self.index >= len(self.images):
             self.index = 0
         self.image = self.images[math.floor(self.index)]
 
-SpriteObject = MySprite(500, 200)
+class Yuta(Sprite):
+    def __init__(self):
+        super().__init__()
+        for i in range(1,22):
+            self.images.append(pygame.image.load('assets/idleprisioner'+str(i)+'.png'))
+        self.x = HEIGHT/2
+        self.y = WIDTH/2
+        self.spriteheight = 255
+        self.spritewidth = 115
+        self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+
+SpriteObject = Yuta()
 SpriteGroup = pygame.sprite.Group(SpriteObject)
 
 # Game over condition
@@ -78,7 +86,7 @@ while running:
 
     # Refesh screen
     SpriteGroup.update()
-    screen.fill((255, 255, 255))
+    screen.blit(pygame.image.load('assets/background.png'), (0, 0))
     SpriteGroup.draw(screen)
 
     # Event handling
