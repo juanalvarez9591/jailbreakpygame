@@ -64,8 +64,8 @@ class Prisioner(Sprite):
 
         self.x = 46
         self.y = 254
-        self.spriteheight = 255
-        self.spritewidth = 115
+        self.spriteheight = 350
+        self.spritewidth = 325
         self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
 
         self.images = self.idleprisioner
@@ -75,9 +75,20 @@ class Prisioner(Sprite):
         if self.index % 2:
             if ScoreMining == False:
                 self.images = self.idleprisioner
+                self.x = 46
+                self.y = 254
+                self.spriteheight = 350
+                self.spritewidth = 325
+                self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+
             elif ScoreMining == True:
                 self.images = self.hustlerprisioner
-        print(self.index)
+                self.x = 400
+                self.y = 490
+                self.spriteheight = 400
+                self.spritewidth = 280
+                self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+
 
 
 # Calling sprites
