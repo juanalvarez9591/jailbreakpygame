@@ -55,13 +55,30 @@ class Sprite(pygame.sprite.Sprite):
 class Prisioner(Sprite):
     def __init__(self):
         super().__init__()
+        self.idleprisioner = []
+        self.hustlerprisioner = []
         for i in range(1,9):
-            self.images.append(pygame.image.load('assets/idleprisioner'+str(i)+'.png'))
+            self.idleprisioner.append(pygame.image.load('assets/idleprisioner'+str(i)+'.png'))
+        for i in range(1,17):
+            self.hustlerprisioner.append(pygame.image.load('assets/hustlerprisoner'+str(i)+'.png'))
+
         self.x = 46
         self.y = 254
         self.spriteheight = 255
         self.spritewidth = 115
         self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+
+        self.images = self.idleprisioner
+    
+    def update(self):
+        super().update()
+        if self.index % 2:
+            if ScoreMining == False:
+                self.images = self.idleprisioner
+            elif ScoreMining == True:
+                self.images = self.hustlerprisioner
+        print(self.index)
+
 
 # Calling sprites
 PrisionerObject = Prisioner()
