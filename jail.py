@@ -13,13 +13,14 @@ screen = pygame.display.set_mode([HEIGHT, WIDTH])
 # Timer things outside loop
 startTime = time.time()
 timer = "0" # logic license, so we can check if timer is != than x (x will be != 0 so it will fakely pass the first time) before defining x
-TIMERLIMIT = "10" # need to be a str
+TIMERLIMIT = "60" # need to be a str
 
 # Score stuff
 SCORE = 0
 ScoreMining = False 
 ScorePace = {"Normal":5}
-SCORELIMIT = 10
+SCORELIMIT = 100
+GameStop = False
 
 # Displaying text
 def displayText(text, x, y, fontsize=64, fontcolor=(0,0,0)):
@@ -48,11 +49,12 @@ class Sprite(pygame.sprite.Sprite):
 
     def update(self):
         self.index += 0.2 # Frame upgrade velocity
+        if GameStop == True:
+            self.index = 0
         if self.index >= len(self.images):
             self.index = 0
-        try:
-            self.image = self.images[math.floor(self.index)]
-        except: pass
+        self.image = self.images[math.floor(self.index)]
+
 class Prisioner(Sprite):
     def __init__(self):
         super().__init__()
@@ -63,6 +65,14 @@ class Prisioner(Sprite):
         for i in range(1,17):
             self.hustlerprisioner.append(pygame.image.load('assets/hustlerprisoner'+str(i)+'.png'))
 
+        self.x = 46
+        self.y = 254
+        self.spriteheight = 350
+        self.spritewidth = 325
+        self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+
+        self.images = self.idleprisioner
+    
     def update(self):
         super().update()
         if self.index % 2:
@@ -76,8 +86,8 @@ class Prisioner(Sprite):
 
             elif ScoreMining == True:
                 self.images = self.hustlerprisioner
-                self.x = 400
-                self.y = 490
+                self.x = 256
+                self.y = 274
                 self.spriteheight = 400
                 self.spritewidth = 280
                 self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
@@ -92,8 +102,10 @@ Prisioner = pygame.sprite.Group(PrisionerObject)
 def GameOver():
     if timer == TIMERLIMIT and SCORE < SCORELIMIT:
         displayText("GAME OVER!", 150, 175, 150, (225, 45, 44))
+        GameStop = True
     elif SCORE >= SCORELIMIT:
         displayText("YOU WIN!", 200, 260, 150, (255, 165, 0))
+        GameStop = True
 
 # Fixing FPS
 clock = pygame.time.Clock()
