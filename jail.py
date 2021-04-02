@@ -50,8 +50,9 @@ class Sprite(pygame.sprite.Sprite):
         self.index += 0.2 # Frame upgrade velocity
         if self.index >= len(self.images):
             self.index = 0
-        self.image = self.images[math.floor(self.index)]
-
+        try:
+            self.image = self.images[math.floor(self.index)]
+        except: pass
 class Prisioner(Sprite):
     def __init__(self):
         super().__init__()
@@ -62,14 +63,6 @@ class Prisioner(Sprite):
         for i in range(1,17):
             self.hustlerprisioner.append(pygame.image.load('assets/hustlerprisoner'+str(i)+'.png'))
 
-        self.x = 46
-        self.y = 254
-        self.spriteheight = 350
-        self.spritewidth = 325
-        self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
-
-        self.images = self.idleprisioner
-    
     def update(self):
         super().update()
         if self.index % 2:
