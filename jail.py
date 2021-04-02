@@ -1,6 +1,7 @@
 import pygame
 import time
 import math 
+import random
 
 pygame.init()
 
@@ -13,13 +14,13 @@ screen = pygame.display.set_mode([HEIGHT, WIDTH])
 # Timer things outside loop
 startTime = time.time()
 timer = "0" # logic license, so we can check if timer is != than x (x will be != 0 so it will fakely pass the first time) before defining x
-TIMERLIMIT = "60" # need to be a str
+TIMERLIMIT = "2" # need to be a str
 
 # Score stuff
 SCORE = 0
 ScoreMining = False 
 ScorePace = {"Normal":5}
-SCORELIMIT = 100
+SCORELIMIT = 390
 GameStop = False
 
 # Displaying text
@@ -48,9 +49,8 @@ class Sprite(pygame.sprite.Sprite):
         except: pass
 
     def update(self):
-        self.index += 0.2 # Frame upgrade velocity
-        if GameStop == True:
-            self.index = 0
+        if GameStop != True:
+            self.index += 0.2 # Frame upgrade velocity
         if self.index >= len(self.images):
             self.index = 0
         self.image = self.images[math.floor(self.index)]
@@ -92,7 +92,10 @@ class Prisioner(Sprite):
                 self.spritewidth = 280
                 self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
 
-
+# Progress bar setup
+def ProgressBar():
+    color = (255,0,0)
+    pygame.draw.rect(screen, color, pygame.Rect(273, 75, SCORE, 100))
 
 # Calling sprites
 PrisionerObject = Prisioner()
@@ -100,7 +103,8 @@ Prisioner = pygame.sprite.Group(PrisionerObject)
 
 # Game over condition
 def GameOver():
-    if timer == TIMERLIMIT and SCORE < SCORELIMIT:
+    global GameStop
+    if timer == TIMERLIMIT:
         displayText("GAME OVER!", 150, 175, 150, (225, 45, 44))
         GameStop = True
     elif SCORE >= SCORELIMIT:
@@ -116,12 +120,22 @@ while running:
     # debugging mousepos
     mousex,mousey = pygame.mouse.get_pos()
     print(mousex, mousey)
-    # Fixing FPS
+
+    # Fixing FPS TRY TO REMOVE IN FUTURE!
     dt = clock.tick(30)/1000.0
 
-    # Refesh screen
+    # Refresh progress bar
+    ProgressBar()
+
+    # Refresh screen
     screen.blit(pygame.image.load('assets/background.png'), (0, 0))
-    
+
+    # Refresh police
+    # Here goes police
+
+    # Refresh cell
+    screen.blit(pygame.image.load('assets/cell.png'), (0, 0))
+
     # Refresh prisioner sprite
     Prisioner.update()
     Prisioner.draw(screen)
