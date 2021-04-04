@@ -14,12 +14,12 @@ screen = pygame.display.set_mode([HEIGHT, WIDTH])
 # Timer things outside loop
 startTime = time.time()
 timer = "0" # logic license, so we can check if timer is != than x (x will be != 0 so it will fakely pass the first time) before defining x
-TIMERLIMIT = "2" # need to be a str
+TIMERLIMIT = "90" # need to be a str
 
 # Score stuff
 SCORE = 0
 ScoreMining = False 
-ScorePace = {"Normal":5}
+ScorePace = {"Normal":5, "Fast":10}
 SCORELIMIT = 390
 GameStop = False
 
@@ -92,14 +92,53 @@ class Prisioner(Sprite):
                 self.spritewidth = 280
                 self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
 
-# Progress bar setup
-def ProgressBar():
-    color = (255,0,0)
-    pygame.draw.rect(screen, color, pygame.Rect(273, 75, SCORE, 100))
+class Police(Sprite):
+    def __init__(self):
+        super().__init__()
+        self.yuta = []
+        self.yutabusting = []
+        for i in range(1,5):
+            self.yuta.append(pygame.image.load('assets/yuta'+str(i)+'.png'))
+        for i in range(1,23):
+            self.yutabusting.append(pygame.image.load('assets/yutahustling'+str(i)+'.png'))
+        
+        self.walkorientation = False
+        self.x = 650
+        self.y = 160
+        self.spriteheight = 115
+        self.spritewidth = 255
+        self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+
+        self.images = self.yuta
+
+    def update(self):
+        super().update()
+        print(self.x)
+        if self.index % 2:
+            if self.x < 105:
+                self.walkorientation = True
+            if self.x > 610:
+                self.walkorientation = False
+
+            if self.walkorientation == False:
+                self.x -= 3
+                self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+            elif self.walkorientation == True:
+                self.image = pygame.transform.flip(self.image, True, False)
+                self.x += 3
+                self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+
 
 # Calling sprites
 PrisionerObject = Prisioner()
 Prisioner = pygame.sprite.Group(PrisionerObject)
+
+YutaObject = Police()
+Yuta = pygame.sprite.Group(YutaObject)
+# Progress bar setup
+def ProgressBar():
+    color = (255,0,0)
+    pygame.draw.rect(screen, color, pygame.Rect(273, 75, SCORE, 100))
 
 # Game over condition
 def GameOver():
@@ -117,10 +156,6 @@ clock = pygame.time.Clock()
 # Game loop
 running = True
 while running:
-    # debugging mousepos
-    mousex,mousey = pygame.mouse.get_pos()
-    print(mousex, mousey)
-
     # Fixing FPS TRY TO REMOVE IN FUTURE!
     dt = clock.tick(30)/1000.0
 
@@ -131,7 +166,8 @@ while running:
     screen.blit(pygame.image.load('assets/background.png'), (0, 0))
 
     # Refresh police
-    # Here goes police
+    Yuta.update()
+    Yuta.draw(screen)
 
     # Refresh cell
     screen.blit(pygame.image.load('assets/cell.png'), (0, 0))
@@ -157,7 +193,7 @@ while running:
         GameOver()
 
     if ScoreMining == True:
-        SCORE += ScorePace["Normal"]*dt
+        SCORE += ScorePace["Fast"]*dt
 
     # Timer
     if timer != TIMERLIMIT:
