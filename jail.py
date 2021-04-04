@@ -97,24 +97,23 @@ class Police(Sprite):
         super().__init__()
         self.yuta = []
         self.yutabusting = []
+        self.yutaleft = [] 
+
         for i in range(1,5):
             self.yuta.append(pygame.image.load('assets/yuta'+str(i)+'.png'))
         for i in range(1,23):
             self.yutabusting.append(pygame.image.load('assets/yutahustling'+str(i)+'.png'))
-        
+        for i in self.yuta:
+            self.yutaleft.append(pygame.transform.flip(i, True, False))
+
+        self.images = self.yuta
+
         self.walkorientation = False
         self.x = 650
         self.y = 160
         self.spriteheight = 115
         self.spritewidth = 255
         self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
-
-        self.images = self.yuta
-
-        self.yutaleft = [] 
-
-        for i in self.yuta:
-            self.yutaleft.append(pygame.transform.flip(i, False, True))
 
     def update(self):
         super().update()
@@ -126,6 +125,7 @@ class Police(Sprite):
                 self.walkorientation = False
 
             if self.walkorientation == False:
+                self.images = self.yuta
                 self.x -= 3
                 self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
             elif self.walkorientation == True:
