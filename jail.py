@@ -111,6 +111,11 @@ class Police(Sprite):
 
         self.images = self.yuta
 
+        self.yutaleft = [] 
+
+        for i in self.yuta:
+            self.yutaleft.append(pygame.transform.flip(i, False, True))
+
     def update(self):
         super().update()
         print(self.x)
@@ -124,7 +129,7 @@ class Police(Sprite):
                 self.x -= 3
                 self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
             elif self.walkorientation == True:
-                self.image = pygame.transform.flip(self.image, True, False)
+                self.images = self.yutaleft
                 self.x += 3
                 self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
 
