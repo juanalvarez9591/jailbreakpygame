@@ -4,6 +4,7 @@ import math
 import random
 
 pygame.init()
+pygame.display.set_caption('JailbreakPy')
 
 # Screen resolution
 HEIGHT = 800
@@ -116,7 +117,6 @@ class Police(Sprite):
 
     def update(self):
         super().update()
-        print(self.x)
         if self.index % 2:
             if self.busted == False:
                 if self.walking == True:
@@ -176,6 +176,7 @@ def GameOver():
 # Game loop
 running = True
 freeze = False
+
 while running:
     # Score bar
     if ScoreMining == True:
