@@ -125,7 +125,7 @@ class Police(Sprite):
                 if self.walking == True:
                     if self.x <= 105:
                         self.walkorientation = True
-                    if self.x == 610:
+                    if self.x >= 610:
                         self.walkorientation = False
                         if random.randint(1,2) == 2:
                             self.walking = False
@@ -140,15 +140,15 @@ class Police(Sprite):
                         self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
 
                 elif self.walking == False:
-                    self.x = 610
+                    self.x = 605
                     self.rect =  pygame.Rect(888, self.y, self.spriteheight, self.spritewidth)
-                    if random.randint(1,100) == 1:
+                    if random.randint(1,75) == 1:
                         self.walking = True
             
             elif self.busted == True:
                 self.images = self.yutabusting
 
-            if self.x < 605 and ScoreMining == True:
+            if self.x < 550 and ScoreMining == True:
                 self.busted = True
 
 
