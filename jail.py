@@ -14,7 +14,7 @@ screen = pygame.display.set_mode([HEIGHT, WIDTH])
 # Timer things outside loop
 startTime = time.time()
 timer = "0" # logic license, so we can check if timer is != than x (x will be != 0 so it will fakely pass the first time) before defining x
-TIMERLIMIT = "90" # need to be a str
+TIMERLIMIT = "180" # need to be a str
 
 # Score stuff
 SCORE = 0
@@ -127,7 +127,7 @@ class Police(Sprite):
                         self.walkorientation = True
                     if self.x >= 610:
                         self.walkorientation = False
-                        if random.randint(1,2) == 2:
+                        if random.randint(1,4) != 1:
                             self.walking = False
 
                     if self.walkorientation == False:
@@ -142,7 +142,7 @@ class Police(Sprite):
                 elif self.walking == False:
                     self.x = 605
                     self.rect =  pygame.Rect(888, self.y, self.spriteheight, self.spritewidth)
-                    if random.randint(1,75) == 1:
+                    if random.randint(1,100) == 1:
                         self.walking = True
             
             elif self.busted == True:
@@ -220,8 +220,8 @@ while running:
 
     # Timer
     if timer != TIMERLIMIT:
-        timer = str(int(time.time() - startTime))
-        Timer = displayText(timer, 150, 60)
+        timer = int(time.time() - startTime)
+        Timer = displayText(str(180-timer), 150, 60)
     else: 
         GameOver()
 
