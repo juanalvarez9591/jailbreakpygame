@@ -146,7 +146,10 @@ class Police(Sprite):
                         self.walking = True
             
             elif self.busted == True:
-                pass
+                self.images = self.yutabusting
+
+            if self.x < 605 and ScoreMining == True:
+                self.busted = True
 
 
 
@@ -165,8 +168,7 @@ def ProgressBar():
 def GameOver():
     global GameStop
     if timer == TIMERLIMIT:
-        displayText("GAME OVER!", 150, 175, 150, (225, 45, 44))
-        GameStop = True
+        displayText("TIME'S UP!", 150, 175, 150, (225, 45, 44))
     elif SCORE >= SCORELIMIT:
         displayText("YOU WIN!", 200, 260, 150, (255, 165, 0))
         GameStop = True
