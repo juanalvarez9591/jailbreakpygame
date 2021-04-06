@@ -14,14 +14,12 @@ screen = pygame.display.set_mode([HEIGHT, WIDTH])
 # Timer things outside loop
 startTime = time.time()
 timer = "0" # logic license, so we can check if timer is != than x (x will be != 0 so it will fakely pass the first time) before defining x
-TIMERLIMIT = "180" # need to be a str
+TIMERLIMIT = "90" # need to be a str
 
 # Score stuff
 SCORE = 0
 ScoreMining = False 
-ScorePace = {"Normal":5, "Fast":10}
 SCORELIMIT = 390
-GameStop = False
 
 # Displaying text
 def displayText(text, x, y, fontsize=64, fontcolor=(0,0,0)):
@@ -49,8 +47,7 @@ class Sprite(pygame.sprite.Sprite):
         except: pass
 
     def update(self):
-        if GameStop != True:
-            self.index += 0.2 # Frame upgrade velocity
+        self.index += 0.2 # Frame upgrade velocity
         if self.index >= len(self.images):
             self.index = 0
         self.image = self.images[math.floor(self.index)]
@@ -75,7 +72,7 @@ class Prisioner(Sprite):
     
     def update(self):
         super().update()
-        if self.index % 2:
+        if self.index % 2 and freeze == False:
             if ScoreMining == False:
                 self.images = self.idleprisioner
                 self.x = 46
@@ -151,14 +148,13 @@ class Police(Sprite):
             if self.x < 550 and ScoreMining == True:
                 self.busted = True
 
-
-
 # Calling sprites
 PrisionerObject = Prisioner()
 Prisioner = pygame.sprite.Group(PrisionerObject)
 
 YutaObject = Police()
 Yuta = pygame.sprite.Group(YutaObject)
+
 # Progress bar setup
 def ProgressBar():
     color = (255,0,0)
@@ -166,23 +162,25 @@ def ProgressBar():
 
 # Game over condition
 def GameOver():
-    global GameStop
+    global freeze
     if timer == TIMERLIMIT:
-        displayText("TIME'S UP!", 150, 175, 150, (225, 45, 44))
+        displayText("TIME'S UP!", 200, 175, 150, (225, 45, 44))
+        freeze = True
     elif SCORE >= SCORELIMIT:
-        displayText("YOU WIN!", 200, 260, 150, (255, 165, 0))
-        GameStop = True
-
-# Fixing FPS
-clock = pygame.time.Clock()
+        displayText("YOU WIN!", 200, 175, 150, (255, 165, 0))
+        freeze = True
+    elif YutaObject.busted == True:
+        displayText("BUSTED!", 200, 175, 150, (225, 45, 44))
+        freeze = True
 
 # Game loop
 running = True
+freeze = False
 while running:
-    # Fixing FPS TRY TO REMOVE IN FUTURE!
-    dt = clock.tick(30)/1000.0
+    # Score bar
+    if ScoreMining == True:
+        SCORE += 0.4
 
-    # Refresh progress bar
     ProgressBar()
 
     # Refresh screen
@@ -203,27 +201,18 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and freeze == False:
             ScoreMining = True
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             ScoreMining = False
-    
-    # Score handling
-    displayText(str(int(SCORE)), 25, 25)
-
-    if SCORE >= SCORELIMIT:
-        ScoreMining = False
-        GameOver()
-
-    if ScoreMining == True:
-        SCORE += ScorePace["Fast"]*dt
 
     # Timer
-    if timer != TIMERLIMIT:
-        timer = int(time.time() - startTime)
-        Timer = displayText(str(180-timer), 150, 60)
-    else: 
-        GameOver()
+    if timer != TIMERLIMIT and freeze == False:
+        timer = str(int(time.time() - startTime))
+        Timer = displayText(str(int(TIMERLIMIT)-int(timer)), 150, 60)
+
+    # Check if game is over
+    GameOver()
 
     pygame.display.flip()
 
