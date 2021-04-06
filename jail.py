@@ -98,7 +98,7 @@ class Police(Sprite):
 
         for i in range(1,5):
             self.yuta.append(pygame.image.load('assets/yuta'+str(i)+'.png'))
-        for i in range(1,23):
+        for i in range(1,14):
             self.yutabusting.append(pygame.image.load('assets/yutahustling'+str(i)+'.png'))
         for i in self.yuta:
             self.yutaleft.append(pygame.transform.flip(i, True, False))
