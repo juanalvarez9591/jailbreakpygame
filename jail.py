@@ -109,6 +109,8 @@ class Police(Sprite):
         self.images = self.yuta
 
         self.walkorientation = False
+        self.walking = False
+        self.busted = False
         self.x = 650
         self.y = 160
         self.spriteheight = 115
@@ -119,19 +121,33 @@ class Police(Sprite):
         super().update()
         print(self.x)
         if self.index % 2:
-            if self.x < 105:
-                self.walkorientation = True
-            if self.x > 610:
-                self.walkorientation = False
+            if self.busted == False:
+                if self.walking == True:
+                    if self.x <= 105:
+                        self.walkorientation = True
+                    if self.x == 610:
+                        self.walkorientation = False
+                        if random.randint(1,2) == 2:
+                            self.walking = False
 
-            if self.walkorientation == False:
-                self.images = self.yuta
-                self.x -= 3
-                self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
-            elif self.walkorientation == True:
-                self.images = self.yutaleft
-                self.x += 3
-                self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+                    if self.walkorientation == False:
+                        self.images = self.yuta
+                        self.x -= 3
+                        self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+                    elif self.walkorientation == True:
+                        self.images = self.yutaleft
+                        self.x += 3
+                        self.rect = pygame.Rect(self.x, self.y, self.spriteheight, self.spritewidth)
+
+                elif self.walking == False:
+                    self.x = 610
+                    self.rect =  pygame.Rect(888, self.y, self.spriteheight, self.spritewidth)
+                    if random.randint(1,100) == 1:
+                        self.walking = True
+            
+            elif self.busted == True:
+                pass
+
 
 
 # Calling sprites
@@ -143,7 +159,7 @@ Yuta = pygame.sprite.Group(YutaObject)
 # Progress bar setup
 def ProgressBar():
     color = (255,0,0)
-    pygame.draw.rect(screen, color, pygame.Rect(273, 75, SCORE, 100))
+    pygame.draw.rect(screen, color, pygame.Rect(273, 75, int(SCORE), 100))
 
 # Game over condition
 def GameOver():
